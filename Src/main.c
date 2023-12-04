@@ -43,16 +43,50 @@ int main(void)
 	display_init();
 	init_draw_module();
 	init_fonts();
-	draw_string("0 9 : 2 4", COOLVETICACR200, BLACK, 45, 290);
-	draw_string("11, December 2023", HELVETICA30, BLACK, 0, 48);
-	draw_image(weather_icons, 230, 54, 48, 48);
+	draw_string("0 9 : 2 5", COOLVETICACR200, BLACK, 45, 290);
+	draw_string("11 December, 2023", HELVETICA30, BLACK, 10, 48);
+	draw_image(weather_icons, 230, 60, 64, 64);
 	draw_hLine(0, 60, 399, BLACK);
-	draw_vLine(300, 0, 299, BLACK);
+	draw_vLine(300, 60, 299, BLACK);
+//	display_partial_enable();
+//	delay_ms(5000);
 	display_render_image((uint8_t *)image_buffer);
-	delay_ms(5000);
-	display_clear();
+	create_buffer_copy();
+	display_init_partial();
+	draw_string("0 9 : 2 7", COOLVETICACR200, BLACK, 45, 290);
+	display_render_image((uint8_t *)image_buffer);
+	create_buffer_copy();
+//	delay_ms(1000);
+	draw_string("0 9 : 2 8", COOLVETICACR200, BLACK, 45, 290);
+	display_render_image((uint8_t *)image_buffer);
+	create_buffer_copy();
+	draw_string("0 9 : 2 9", COOLVETICACR200, BLACK, 45, 290);
+	display_render_image((uint8_t *)image_buffer);
+	create_buffer_copy();
+	draw_string("0 9 : 3 0", COOLVETICACR200, BLACK, 45, 290);
+	display_render_image((uint8_t *)image_buffer);
+	create_buffer_copy();
+	draw_image(weather_icons + 512, 230, 60, 64, 64);
+	draw_hLine(0, 60, 399, BLACK);
+	draw_vLine(300, 60, 299, BLACK);
+	draw_string("               ", COOLVETICACR200, BLACK, 45, 290);
+	draw_string("0 9 : 3 1", COOLVETICACR200, BLACK, 45, 290);
+	display_render_image((uint8_t *)image_buffer);
+	create_buffer_copy();
+//	delay_ms(5000);
+//	display_clear();
     /* Loop forever */
-	for(;;);
+
+//	display_set_partial(28, 36, 0, 64);
+//	for(;;){
+//		draw_image((weather_icons+512), 230, 60, 64, 64);
+//		display_render_image(image_buffer);
+//		delay_ms(2000);
+//		draw_image(weather_icons, 230, 60, 64, 64);
+//		display_render_image(image_buffer);
+//		delay_ms(2000);
+//
+//	}
 }
 void init_clocks(){
 

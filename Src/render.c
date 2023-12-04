@@ -10,10 +10,10 @@
 #include "render.h"
 #include "stdbool.h"
 #include "display.h"
+#include "string.h"
 uint8_t image_buffer[DISPLAY_BUFFER_SIZE];
-
+uint8_t old_image_buffer[DISPLAY_BUFFER_SIZE];
 void draw_string(char* str, font_t font, colour_t font_colour, uint16_t x, uint16_t y) {
-
 	int i = 0;
 	for (i = 0;i < font_table_size;i++) {
 		if (font == font_table[i].font_name)
@@ -92,6 +92,7 @@ void draw_image(const uint8_t *image_data, uint16_t x,uint16_t y, uint16_t width
 	}
 }
 void draw_hLine(uint16_t x,uint16_t y, uint16_t len,colour_t colour){
+
 	for(uint16_t i = x;i<x+len;i++){
 		draw_pixel(i, y, colour);
 	}
@@ -110,6 +111,9 @@ void draw_pixel(uint16_t x,uint16_t y,colour_t colour){
 	else{
 		image_buffer[image_buf_index] &= ~mask;
 	}
+}
+void create_buffer_copy(){
+	memcpy(old_image_buffer,image_buffer,DISPLAY_BUFFER_SIZE);
 }
 void clear_area(uint16_t x,uint16_t y){
 

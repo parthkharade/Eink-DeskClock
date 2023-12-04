@@ -64,11 +64,17 @@
 #define DISPLAY_BUFFER_SIZE 	(((DISPLAY_WIDTH)/8)*(DISPLAY_HEIGHT))
 
 void display_init();
+void display_init_partial();
 void display_send_command(uint8_t cmd);
 void display_send_data(uint8_t data);
 void display_clear();
 void display_reset();
 void display_busy_wait();
 void display_render_image(uint8_t* imageData);
+void display_render_partial_image(uint8_t *image_data,uint16_t width,uint16_t height);
 void display_set_lut(void);
+void display_set_partial(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end);
+void display_partial_enable();
+void display_partial_disable();
+void display_refresh();
 #endif /* DISPLAY_H_ */

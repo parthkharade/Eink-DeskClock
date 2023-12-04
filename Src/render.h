@@ -11,6 +11,7 @@
 #include "assets/fonts/fonts.h"
 
 extern uint8_t image_buffer[15000];
+extern uint8_t old_image_buffer[15000];
 typedef enum{
 	BLACK,
 	WHITE
@@ -28,5 +29,6 @@ void draw_pixel(uint16_t x,uint16_t y,colour_t colour);
 void clear_area(uint16_t x,uint16_t y);
 void set_area(uint16_t x, uint16_t y);
 void init_draw_module();
+void create_buffer_copy();
 #endif /* RENDER_H_ */
 
