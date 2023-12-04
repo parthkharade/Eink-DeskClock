@@ -10,7 +10,7 @@
 #define CHANNEL_DACA 1
 #define CHANNEL_DACB 2
 volatile uint8_t result_ready = false;
-volatile adc_int_count = 0;
+
 void init_adc(){
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 
@@ -33,7 +33,6 @@ uint8_t get_result(){
  * ADC IRQ Handler.
  * */
 void ADC_IRQHandler(){
-	adc_int_count++;
 	result_ready = true;
 	ADC1->SR &= ~(ADC_SR_EOC);
 	NVIC_ClearPendingIRQ(ADC_IRQn);

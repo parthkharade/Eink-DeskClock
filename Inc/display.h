@@ -47,7 +47,7 @@
 #define DISP_FLG    0x71    // Get Status Flag
 #define DISP_AVCM   0x80    // Auto measeure Vcom
 #define DISP_RVCM   0x81    // Read Vcom
-#define DISP_RVCM   0x82    // VCOM DC SETTING
+#define DISP_VDCS   0x82    // VCOM DC SETTING
 #define DISP_PTL    0x90    // Partial Window Setting
 #define DISP_PTIN   0x91    // Parital in
 #define DISP_PTOUT  0x92    // Partial Out
@@ -58,9 +58,15 @@
 #define DISP_PWS    0xE3    // Power Saving
 #define DISP_TSSET  0xE5    // Force Temperature.
 
+
+#define DISPLAY_WIDTH			400
+#define DISPLAY_HEIGHT			300
+#define DISPLAY_BUFFER_SIZE 	(((DISPLAY_WIDTH)/8)*(DISPLAY_HEIGHT))
+
 void display_init();
 void display_send_command(uint8_t cmd);
 void display_send_data(uint8_t data);
+void display_clear();
 void display_reset();
 void display_busy_wait();
 void display_render_image(uint8_t* imageData);

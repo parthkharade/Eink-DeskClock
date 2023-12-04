@@ -15,7 +15,7 @@ void init_spi1(){
 }
 
 void tx_byte(uint8_t byte){
-	while(! (SPI1->SR & SPI_SR_TXE));
+	while(!(SPI1->SR & SPI_SR_TXE));
 	SPI1->DR = byte;
 }
 

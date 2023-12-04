@@ -23,6 +23,8 @@
 #include "spi.h"
 #include "mux.h"
 #include "display.h"
+#include "render.h"
+#include "assets/icons/icons.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
@@ -39,7 +41,16 @@ int main(void)
 	init_systick();
 	start_systick();
 	display_init();
-	display_render_image(gImage_4in2);
+	init_draw_module();
+	init_fonts();
+	draw_string("0 9 : 2 4", COOLVETICACR200, BLACK, 45, 290);
+	draw_string("11, December 2023", HELVETICA30, BLACK, 0, 48);
+	draw_image(weather_icons, 230, 54, 48, 48);
+	draw_hLine(0, 60, 399, BLACK);
+	draw_vLine(300, 0, 299, BLACK);
+	display_render_image((uint8_t *)image_buffer);
+	delay_ms(5000);
+	display_clear();
     /* Loop forever */
 	for(;;);
 }
