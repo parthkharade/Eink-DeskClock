@@ -28,4 +28,6 @@ void init_gpio(){
 	// Set BSY Pin as input
 	GPIOA->MODER |= (0<<GPIO_MODER_MODE3_Pos);
 
+	GPIOB->OTYPER |= (1<<GPIO_OTYPER_OT6_Pos)|(1<<GPIO_OTYPER_OT7_Pos);
+
 }

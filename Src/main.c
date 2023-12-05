@@ -25,68 +25,55 @@
 #include "display.h"
 #include "render.h"
 #include "assets/icons/icons.h"
+#include "i2c.h"
+#include "hdc2022.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 void init_clocks();
 void enable_module_clocks();
 extern const unsigned char gImage_4in2[];
+char time[]={'0',' ','9',' ',':',' ','0',' ','0',0};
 int main(void)
 {
-//	init_clocks();
+	init_clocks();
 	enable_module_clocks();
+	init_systick();
+	start_systick();
 	init_mux();
 	init_gpio();
 	init_spi1();
-	init_systick();
-	start_systick();
+	i2c_init();
+
 	display_init();
 	init_draw_module();
 	init_fonts();
-	draw_string("0 9 : 2 5", COOLVETICACR200, BLACK, 45, 290);
+	uint16_t dev_id = read_device_id();
+	draw_string(time, COOLVETICACR200, BLACK, 45, 290);
 	draw_string("11 December, 2023", HELVETICA30, BLACK, 10, 48);
 	draw_image(weather_icons, 230, 60, 64, 64);
+	draw_string("ALARM", HELVETICA30, BLACK, 310, 90);
+	draw_string("17:00", HELVETICA30, BLACK, 310, 130);
+	draw_string("08:00", HELVETICA30, BLACK, 310, 170);
+	draw_string("09:00", HELVETICA30, BLACK, 310, 210);
 	draw_hLine(0, 60, 399, BLACK);
 	draw_vLine(300, 60, 299, BLACK);
-//	display_partial_enable();
-//	delay_ms(5000);
 	display_render_image((uint8_t *)image_buffer);
 	create_buffer_copy();
 	display_init_partial();
-	draw_string("0 9 : 2 7", COOLVETICACR200, BLACK, 45, 290);
-	display_render_image((uint8_t *)image_buffer);
-	create_buffer_copy();
-//	delay_ms(1000);
-	draw_string("0 9 : 2 8", COOLVETICACR200, BLACK, 45, 290);
-	display_render_image((uint8_t *)image_buffer);
-	create_buffer_copy();
-	draw_string("0 9 : 2 9", COOLVETICACR200, BLACK, 45, 290);
-	display_render_image((uint8_t *)image_buffer);
-	create_buffer_copy();
-	draw_string("0 9 : 3 0", COOLVETICACR200, BLACK, 45, 290);
-	display_render_image((uint8_t *)image_buffer);
-	create_buffer_copy();
-	draw_image(weather_icons + 512, 230, 60, 64, 64);
-	draw_hLine(0, 60, 399, BLACK);
-	draw_vLine(300, 60, 299, BLACK);
-	draw_string("               ", COOLVETICACR200, BLACK, 45, 290);
-	draw_string("0 9 : 3 1", COOLVETICACR200, BLACK, 45, 290);
-	display_render_image((uint8_t *)image_buffer);
-	create_buffer_copy();
-//	delay_ms(5000);
-//	display_clear();
-    /* Loop forever */
 
-//	display_set_partial(28, 36, 0, 64);
-//	for(;;){
-//		draw_image((weather_icons+512), 230, 60, 64, 64);
-//		display_render_image(image_buffer);
-//		delay_ms(2000);
-//		draw_image(weather_icons, 230, 60, 64, 64);
-//		display_render_image(image_buffer);
-//		delay_ms(2000);
-//
-//	}
+	for(int i =1;i<10;i++){
+		time[8] = i%10+48;
+		time[6] = i/10+48;
+		draw_string("               ", COOLVETICACR200, BLACK, 45, 290);
+		draw_string(time, COOLVETICACR200, BLACK, 45, 290);
+		display_render_image((uint8_t *)image_buffer);
+		create_buffer_copy();
+	}
+	display_init();
+	display_render_image((uint8_t *)image_buffer);
+	create_buffer_copy();
+	display_init_partial();
 }
 void init_clocks(){
 
@@ -105,5 +92,7 @@ void init_clocks(){
 }
 void enable_module_clocks(){
 	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOAEN); // GPIO A
+	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOBEN); //GPIO B
 	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // SPI1
+	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // I2C1
 }
