@@ -23,6 +23,10 @@ void start_systick(){
 }
 void SysTick_Handler(){
 	sys_time.ms++;
+	if(sys_time.ms == 60000){
+		sys_time.ms = 0;
+		sys_time.mins++;
+	}
 }
 sys_time_t get_time(){
 	return sys_time;

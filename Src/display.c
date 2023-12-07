@@ -279,16 +279,27 @@ void display_render_image(uint8_t *imageData){
 	display_busy_wait();
 }
 void display_render_partial_image(uint8_t *image_data,uint16_t width,uint16_t height){
+
+	display_send_command(DISP_DTM1);
+	uint8_t x_off = 29;
+	uint8_t y_off = 0;
+	for(int i = 0;i<height;i++){
+		for(int j=0;j<width/8;j++){
+//			display_send_data(~old_image_buffer[(i+y_off)*50+(j+x_off)]);
+			display_send_data(0xFF);
+		}
+	}
 	display_send_command(DISP_DTM2);
 	for(int i=0;i<height;i++){
 		for(int j=0;j<width/8;j++){
-			display_send_data(~image_data[i*width+j]);
+//			display_send_data(~image_data[i*width/8+j]);
+			display_send_data(0x81);
 		}
 	}
 	display_send_command(DISP_DRF);
-	delay_ms(100);
 	display_busy_wait();
-	display_send_command(DISP_DRF);
+//	delay_ms(10);
+//	display_send_command(DISP_DRF);
 
 }
 void display_set_partial(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end){
@@ -297,16 +308,18 @@ void display_set_partial(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16
 	x_start = x_start<<3;
 	x_end = x_end<<3;
 	x_end |= 0x07;
-	display_send_data((uint8_t)x_start>>8);
-	display_send_data((uint8_t)x_start&0X00FF);
-	display_send_data((uint8_t)x_end>>8);
-	display_send_data((uint8_t)x_end&0x00FF);
-	display_send_data((uint8_t)y_start>>8);
-	display_send_data((uint8_t)y_start&0xFF);
-	display_send_data((uint8_t)y_end>>8);
-	display_send_data((uint8_t)y_end&0xFF);
-	display_send_data((uint8_t)0x28);
-	display_render_partial_image((uint8_t *)(weather_icons+512), 64, 64);
+	display_send_data((uint8_t)(x_start>>8));
+	display_send_data((uint8_t)(x_start&0X00FF));
+	display_send_data((uint8_t)(x_end>>8));
+	display_send_data((uint8_t)(x_end&0x00FF));
+	display_send_data((uint8_t)(y_start>>8));
+	display_send_data((uint8_t)(y_start&0xFF));
+	display_send_data((uint8_t)(y_end>>8));
+	display_send_data((uint8_t)(y_end&0xFF));
+	display_send_data((uint8_t)(0x28));
+	display_render_partial_image((uint8_t *)(weather_icons), 64, 64);
+
+
 }
 
 void display_partial_enable(){

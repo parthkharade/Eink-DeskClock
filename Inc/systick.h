@@ -8,8 +8,8 @@
 #ifndef SYSTICK_H_
 #define SYSTICK_H_
 
-//#define SYSTICK_CLK 	12000000
-#define SYSTICK_CLK 	2000000
+#define SYSTICK_CLK 	12000000
+//#define SYSTICK_CLK 	2000000
 #define TICK_TIME_MS	1
 
 typedef struct{
