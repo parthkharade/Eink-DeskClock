@@ -9,8 +9,8 @@
 #include "mcp7940.h"
 #include "systick.h"
 #include "stdbool.h"
-rtc_time_t mcp_curr_time;
-rtc_time_t mcp_config_time;
+static rtc_time_t mcp_curr_time;
+static rtc_time_t mcp_config_time;
 bool change_mcp_time = false;
 void init_mcp7940(){
 	enable_oscillator_mcp7940();

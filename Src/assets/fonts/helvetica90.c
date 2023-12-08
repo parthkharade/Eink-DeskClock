@@ -5,7 +5,7 @@
 
 /*Store the image of the letters (glyph)*/
 
-#include "fonts.h"
+#include "assets/fonts/fonts.h"
 const uint8_t helvetica90_glyph_bitmap[] =
 {
   /*Unicode: U+0030 (0) , Width: 39 */

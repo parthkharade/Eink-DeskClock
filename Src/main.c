@@ -38,7 +38,7 @@ extern const unsigned char gImage_4in2[];
 
 int main(void)
 {
-	rtc_time_t mcp_curr_time;
+
 	init_clocks();
 	enable_module_clocks();
 	init_systick();
@@ -53,7 +53,7 @@ int main(void)
 	init_fonts();
 	assemble_clockface();
 	while(1){
-		mcp_curr_time = get_time_mcp7490();
+
 		delay_ms(2000);
 	}
 

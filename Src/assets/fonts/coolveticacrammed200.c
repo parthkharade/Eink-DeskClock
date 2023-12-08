@@ -1,5 +1,5 @@
 
-#include "fonts.h"
+#include "assets/fonts/fonts.h"
 
 /***********************************************************************************
  * coolvetica crammed rg.otf 200 px Font in U+0020 ( ) .. U+0040 (@)  range with 1 bpp

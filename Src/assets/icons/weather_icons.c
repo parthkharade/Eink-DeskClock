@@ -4,7 +4,7 @@
  *  Created on: Dec 4, 2023
  *      Author: Parth
  */
-#include "icons.h"
+#include <assets/icons/icons.h>
 
 const uint8_t weather_icons[] = {
 		// Clear Day

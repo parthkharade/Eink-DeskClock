@@ -5,7 +5,7 @@
  *      Author: Parth
  */
 
-#include "fonts.h"
+#include "assets/fonts/fonts.h"
 
 uint8_t font_table_size = 0;
 
