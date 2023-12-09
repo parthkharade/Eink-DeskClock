@@ -30,6 +30,8 @@
 #include "mcp7940.h"
 #include "clockface.h"
 #include "statemachine.h"
+#include "timeanddate.h"
+#include "timer.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
@@ -37,12 +39,10 @@ void init_clocks();
 void enable_module_clocks();
 uint8_t button_status = 0;
 uint8_t event_occurred=0;
-extern const unsigned char gImage_4in2[];
+
+
 int main(void)
 {
-
-
-
 	init_clocks();
 	enable_module_clocks();
 	init_systick();
@@ -55,15 +55,31 @@ int main(void)
 	init_mcp7940();
 	init_draw_module();
 	init_fonts();
+
+	timer4_init();
+	timer5_init();
+
+	__enable_irq();
 	assemble_clockface();
+	display_render_image((uint8_t *)image_buffer);
 	display_init_partial();
 	while(1){
+		update_time();
+		if(check_time_diff()){
+			update_clockface = 1;
+		}
 		button_status = get_button_status();
+
+		if( (is_alarm_ringing()) && button_status == 1)
+		{
+			button_status = 0;
+		}
 		if(event_occurred){
 			event_occurred = 0;
 			process_event(button_status);
-			assemble_clockface();
 		}
+		clockface_update();
+		check_alarm_match();
 	}
 
 }
@@ -87,4 +103,7 @@ void enable_module_clocks(){
 	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOBEN); //GPIO B
 	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // SPI1
 	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // I2C1
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN; // GPIOD
+	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;	// TIMER4;
+	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;	// TIMER4;
 }

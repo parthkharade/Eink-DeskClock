@@ -7,7 +7,7 @@
 
 #ifndef MCP7940_H_
 #define MCP7940_H_
-
+#include "stdint.h"
 typedef struct{
 	uint8_t sec;
 	uint8_t min;
@@ -17,6 +17,10 @@ typedef struct{
 	uint8_t month;
 	uint8_t year;
 }rtc_time_t;
+
+
+extern rtc_time_t mcp_curr_time;
+extern rtc_time_t mcp_config_time;
 
 #define MCP_DEV_ADD 0x6F
 #define MCP_SEC		0x00
@@ -36,5 +40,5 @@ void init_mcp7940();
 void enable_oscillator_mcp7940();
 void disable_oscillator_mcp7940();
 void set_time_mcp7490();
-rtc_time_t get_time_mcp7490();
+void get_time_mcp7490();
 #endif /* MCP7940_H_ */

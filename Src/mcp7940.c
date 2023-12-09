@@ -9,14 +9,18 @@
 #include "mcp7940.h"
 #include "systick.h"
 #include "stdbool.h"
-static rtc_time_t mcp_curr_time;
-static rtc_time_t mcp_config_time;
+#include "timeanddate.h"
+
+rtc_time_t mcp_curr_time;
+rtc_time_t mcp_config_time;
 bool change_mcp_time = false;
 void init_mcp7940(){
 	enable_oscillator_mcp7940();
 	if(change_mcp_time){
 		set_time_mcp7490();
 	}
+	get_time_mcp7490();
+
 }
 void enable_oscillator_mcp7940(){
 	uint8_t rec_buf[1];
@@ -48,7 +52,7 @@ void set_time_mcp7490(){
 	delay_ms(10);
 	enable_oscillator_mcp7940();
 }
-rtc_time_t get_time_mcp7490(){
+void  get_time_mcp7490(){
 	uint8_t time_buf[7];
 	i2c_read_bytes(time_buf, MCP_DEV_ADD,0x00, 7);
 	mcp_curr_time.sec 	=	time_buf[0];
@@ -58,5 +62,4 @@ rtc_time_t get_time_mcp7490(){
 	mcp_curr_time.date =	time_buf[4];
 	mcp_curr_time.month =	time_buf[5];
 	mcp_curr_time.year	=	time_buf[6];
-	return mcp_curr_time;
 }

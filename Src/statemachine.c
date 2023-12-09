@@ -7,11 +7,11 @@
 
 
 #include "statemachine.h"
-
+#include "clockface.h"
 typedef void(*clockstate_callback)();
 
 
-
+extern uint8_t update_display;
 
 typedef struct{
 	clock_state_t curr_state;
@@ -48,6 +48,10 @@ void process_event(uint8_t event){
 	if (event >= 1) {
 		state_tbl[curr_state].callback_func[event-1]();
 		curr_state = state_tbl[curr_state].next_state[event-1];
+		update_clockface = 1;
+	}
+	else{
+		mute_alarm();
 	}
 	//changes state according to current state and event.
 

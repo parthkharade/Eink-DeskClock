@@ -14,9 +14,9 @@
 #include "statemachine.h"
 #include "alarms.h"
 #include "assets/icons/icons.h"
-rtc_time_t mcp_curr_time;
-
-
+#include "timeanddate.h"
+uint8_t partial_update_count = 0;
+uint8_t update_clockface = 0;
 char temp_str[4] = {' ',' ','C',0};
 char hum_str[4] = {' ',' ','%',0};
 char date_str[31];
@@ -71,7 +71,7 @@ const char *minutes_of_hour[] = {
 void assemble_clockface(){
 		uint8_t *temp_hum;
 		temp_hum = hdc2022_get_data();
-		mcp_curr_time = get_time_mcp7490();
+		get_time_mcp7490();
 		clockface_assemble_time();
 		clockface_assemble_date(HELVETICA30);
 		clockface_assemble_alarms();
@@ -91,11 +91,24 @@ void assemble_clockface(){
 		draw_hLine(0, 60, 399, BLACK);
 		draw_hLine(232, 208, 169, BLACK);
 		draw_vLine(232, 60, 299, BLACK);
-		display_render_image((uint8_t *)image_buffer);
-		create_buffer_copy();
-
 }
 
+void clockface_update(){
+	if(update_clockface){
+		assemble_clockface();
+		if(partial_update_count>=9){
+			display_init();
+			display_render_image((uint8_t *)image_buffer);
+			display_init_partial();
+			partial_update_count = 0;
+		}
+		else{
+			display_render_image((uint8_t *)image_buffer);
+			partial_update_count++;
+		}
+		update_clockface = 0;
+	}
+}
 void clockface_assemble_date(font_t font){
 	uint8_t temp_var; // temp var to hold bcd to decimal conversion of values.
 
@@ -130,7 +143,7 @@ void clockface_assemble_date(font_t font){
 void clockface_assemble_time(){
 	*time_str = 0;
 	uint8_t temp_var; // temp var to hold bcd to decimal conversion of values.
-	temp_var = ((mcp_curr_time.hrs>>4)&0x01)*10 +(mcp_curr_time.hrs&0x0F);
+	temp_var = ((mcp_curr_time.hrs>>4)&0x03)*10 +(mcp_curr_time.hrs&0x0F);
 	strcat(time_str,hours_of_day_wspaces[temp_var]);
 	strcat(time_str,":");
 	temp_var = ((mcp_curr_time.min>>4)&0x07)*10 +(mcp_curr_time.min&0x0F);
@@ -193,7 +206,7 @@ void clockface_assemble_alarms(){
 			draw_string("    ", HELVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
 		}
 
-		if(alarm_table[i].alarm_enb){
+		if(alarm_table[i].usr_alarm_enb){
 			uint16_t icon_x_cord = 350;
 			uint16_t icon_y_cord = 118 + i*28;
 			const uint8_t *icon_data = misc_icons + misc_icon_dsc_table[ALARM_ICON].icon_index;
@@ -207,30 +220,6 @@ void clockface_assemble_alarms(){
 		}
 	}
 
-//
-//	*time_str = 0;
-//	temp_var = ((alarm_table[1].alarm_hrs>>4)&0x01)*10 +(alarm_table[1].alarm_hrs&0x0F);
-//	strcat(time_str,hours_of_day[temp_var]);
-//	strcat(time_str,":");
-//	temp_var = ((alarm_table[1].alarm_min>>4)&0x07)*10 +(alarm_table[1].alarm_min&0x0F);
-//	strcat(time_str,minutes_of_hour[temp_var]);
-//	draw_string(time_str, HELVETICA30, BLACK, 238, 146);
-//
-//	*time_str = 0;
-//	temp_var = ((alarm_table[2].alarm_hrs>>4)&0x01)*10 +(alarm_table[2].alarm_hrs&0x0F);
-//	strcat(time_str,hours_of_day[temp_var]);
-//	strcat(time_str,":");
-//	temp_var = ((alarm_table[2].alarm_min>>4)&0x07)*10 +(alarm_table[2].alarm_min&0x0F);
-//	strcat(time_str,minutes_of_hour[temp_var]);
-//	draw_string(time_str, HELVETICA30, BLACK, 238, 174);
-//
-//	*time_str = 0;
-//	temp_var = ((alarm_table[3].alarm_hrs>>4)&0x01)*10 +(alarm_table[3].alarm_hrs&0x0F);
-//	strcat(time_str,hours_of_day[temp_var]);
-//	strcat(time_str,":");
-//	temp_var = ((alarm_table[3].alarm_min>>4)&0x07)*10 +(alarm_table[3].alarm_min&0x0F);
-//	strcat(time_str,minutes_of_hour[temp_var]);
-//	draw_string(time_str, HELVETICA30, BLACK, 238, 202);
 }
 
 void clockface_assemble_temp(){
