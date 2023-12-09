@@ -3201,7 +3201,7 @@ const font_glyph_dsc_t helvetica30_glyph_dsc[] =
   {.w_px = 14,	.glyph_index = 840},/*Unicode: U+0033 (3)*/
   {.w_px = 14,	.glyph_index = 900},/*Unicode: U+0034 (4)*/
   {.w_px = 14,	.glyph_index = 960},/*Unicode: U+0035 (5)*/
-  {.w_px = 13,	.glyph_index = 1020},/*Unicode: U+0036 (6)*/
+  {.w_px = 14,	.glyph_index = 1020},/*Unicode: U+0036 (6)*/
   {.w_px = 14,	.glyph_index = 1080},/*Unicode: U+0037 (7)*/
   {.w_px = 14,	.glyph_index = 1140},/*Unicode: U+0038 (8)*/
   {.w_px = 14,	.glyph_index = 1200},/*Unicode: U+0039 (9)*/

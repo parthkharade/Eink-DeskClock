@@ -16,4 +16,5 @@
  * @return 		:	None
  * */
 void init_gpio();
+uint8_t get_button_status();
 #endif /* GPIO_H_ */

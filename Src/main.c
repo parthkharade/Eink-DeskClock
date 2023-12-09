@@ -29,15 +29,19 @@
 #include "hdc2022.h"
 #include "mcp7940.h"
 #include "clockface.h"
+#include "statemachine.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 void init_clocks();
 void enable_module_clocks();
+uint8_t button_status = 0;
+uint8_t event_occurred=0;
 extern const unsigned char gImage_4in2[];
-
 int main(void)
 {
+
+
 
 	init_clocks();
 	enable_module_clocks();
@@ -52,9 +56,14 @@ int main(void)
 	init_draw_module();
 	init_fonts();
 	assemble_clockface();
+	display_init_partial();
 	while(1){
-
-		delay_ms(2000);
+		button_status = get_button_status();
+		if(event_occurred){
+			event_occurred = 0;
+			process_event(button_status);
+			assemble_clockface();
+		}
 	}
 
 }

@@ -12,4 +12,5 @@
 void assemble_clockface();
 void clockface_assemble_date(font_t font);
 void clockface_assemble_time();
+void clockface_assemble_alarms();
 #endif /* CLOCKFACE_H_ */

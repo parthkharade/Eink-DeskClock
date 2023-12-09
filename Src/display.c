@@ -266,8 +266,8 @@ void display_clear(){
  */
 void display_render_image(uint8_t *imageData){
 	display_busy_wait();
-	display_send_command(DISP_DTM1);
 
+	display_send_command(DISP_DTM1);
 	for(int i=0;i<DISPLAY_BUFFER_SIZE;i++){
 		display_send_data(~old_image_buffer[i]);
 	}
@@ -276,6 +276,7 @@ void display_render_image(uint8_t *imageData){
 		display_send_data(~imageData[i]);
 	}
 	display_send_command(DISP_DRF);
+	create_buffer_copy();
 	display_busy_wait();
 }
 void display_render_partial_image(uint8_t *image_data,uint16_t width,uint16_t height){
@@ -317,8 +318,6 @@ void display_set_partial(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16
 	display_send_data((uint8_t)(y_end>>8));
 	display_send_data((uint8_t)(y_end&0xFF));
 	display_send_data((uint8_t)(0x28));
-	display_render_partial_image((uint8_t *)(weather_icons), 64, 64);
-
 
 }
 

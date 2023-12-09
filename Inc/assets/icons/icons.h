@@ -16,11 +16,11 @@ typedef struct{
 	uint16_t icon_index;
 }icon_dsc_t;
 
-//typedef enum{
-//	CLEAR_DAY,
-//	CLEAR_NIGHT,
-//};
+typedef enum{
+	BLANK_32x32,
+	ALARM_ICON
+}misc_icons_t;
 
-extern const uint8_t weather_icons[];
-
+extern const uint8_t misc_icons[];
+extern const icon_dsc_t misc_icon_dsc_table[];
 #endif /* ASSETS_ICONS_ICONS_H_ */
