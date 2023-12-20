@@ -14,10 +14,7 @@ typedef struct {
 }font_glyph_dsc_t;
 
 typedef enum{
-	HELVETICA30,
-	HELVETICA90,
-	HELVETICA120,
-	COOLVETICACR180,
+	COOLVETICA30,
 	COOLVETICACR200
 }font_t;
 
@@ -33,18 +30,18 @@ typedef struct {
 void init_fonts();
 extern font_table_t font_table[];
 extern uint8_t font_table_size;
-extern const uint8_t helvetica30_glyph_bitmap[];
-extern const font_glyph_dsc_t helvetica30_glyph_dsc[];
+extern const uint8_t coolvetica30_glyph_bitmap[];
+extern const font_glyph_dsc_t coolvetica30_glyph_dsc[];
 
 
-extern const uint8_t helvetica90_glyph_bitmap[];
-extern const font_glyph_dsc_t helvetica90_glyph_dsc[];
-
-extern const uint8_t helvetica120_glyph_bitmap[];
-extern const font_glyph_dsc_t helvetica120_glyph_dsc[];
-
-extern const uint8_t coolveticacrammed180_glyph_bitmap[];
-extern const font_glyph_dsc_t coolveticacrammed180_glyph_dsc[];
+//extern const uint8_t helvetica90_glyph_bitmap[];
+//extern const font_glyph_dsc_t helvetica90_glyph_dsc[];
+//
+//extern const uint8_t helvetica120_glyph_bitmap[];
+//extern const font_glyph_dsc_t helvetica120_glyph_dsc[];
+//
+//extern const uint8_t coolveticacrammed180_glyph_bitmap[];
+//extern const font_glyph_dsc_t coolveticacrammed180_glyph_dsc[];
 
 extern const uint8_t coolveticacrammed200_glyph_bitmap[];
 extern const font_glyph_dsc_t coolveticacrammed200_glyph_dsc[];

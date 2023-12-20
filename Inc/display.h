@@ -63,6 +63,7 @@
 #define DISPLAY_HEIGHT			300
 #define DISPLAY_BUFFER_SIZE 	(((DISPLAY_WIDTH)/8)*(DISPLAY_HEIGHT))
 
+extern uint8_t display_timeout_flag;
 void display_init();
 void display_init_partial();
 void display_send_command(uint8_t cmd);

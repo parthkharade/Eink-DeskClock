@@ -6,7 +6,7 @@
 /*Store the image of the letters (glyph)*/
 #include "stdint.h"
 #include "assets/fonts/fonts.h"
-const uint8_t helvetica30_glyph_bitmap[] =
+const uint8_t coolvetica30_glyph_bitmap[] =
 {
   /*Unicode: U+0020 ( ) , Width: 8 */
   0x00,  //........ 
@@ -3177,7 +3177,7 @@ const uint8_t helvetica30_glyph_bitmap[] =
 
 
 };
-const font_glyph_dsc_t helvetica30_glyph_dsc[] =
+const font_glyph_dsc_t coolvetica30_glyph_dsc[] =
 {
   {.w_px = 8,	.glyph_index = 0},	/*Unicode: U+0020 ( )*/
   {.w_px = 3,	.glyph_index = 30},	/*Unicode: U+0021 (!)*/

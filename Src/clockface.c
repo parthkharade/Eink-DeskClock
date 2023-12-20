@@ -69,24 +69,12 @@ const char *minutes_of_hour[] = {
 #define DATE_Y_CORD 48
 
 void assemble_clockface(){
-		uint8_t *temp_hum;
-		temp_hum = hdc2022_get_data();
+
 		get_time_mcp7490();
 		clockface_assemble_time();
-		clockface_assemble_date(HELVETICA30);
+		clockface_assemble_date(COOLVETICA30);
 		clockface_assemble_alarms();
-		draw_string("ROOM", HELVETICA30, BLACK, 280, 236);
-		temp_str[0] = temp_hum[0]/10+48;
-		temp_str[1] = temp_hum[0]%10+48;
-
-		hum_str[0] = temp_hum[1]/10+48;
-		hum_str[1] = temp_hum[1]%10+48;
-		draw_string("TEMP ", HELVETICA30, BLACK, 238, 264);
-		draw_string("RH   ", HELVETICA30, BLACK, 240, 292);
-		draw_string(":", HELVETICA30, BLACK, 330, 264);
-		draw_string(":   ", HELVETICA30, BLACK, 330, 292);
-		draw_string(temp_str, HELVETICA30, BLACK, 342, 264);
-		draw_string(hum_str, HELVETICA30, BLACK, 342, 292);
+		clockface_assemble_temp();
 
 		draw_hLine(0, 60, 399, BLACK);
 		draw_hLine(232, 208, 169, BLACK);
@@ -143,16 +131,49 @@ void clockface_assemble_date(font_t font){
 void clockface_assemble_time(){
 	*time_str = 0;
 	uint8_t temp_var; // temp var to hold bcd to decimal conversion of values.
-	temp_var = ((mcp_curr_time.hrs>>4)&0x03)*10 +(mcp_curr_time.hrs&0x0F);
-	strcat(time_str,hours_of_day_wspaces[temp_var]);
-	strcat(time_str,":");
-	temp_var = ((mcp_curr_time.min>>4)&0x07)*10 +(mcp_curr_time.min&0x0F);
-	strcat(time_str,minutes_of_hour_wspaces[temp_var]);
-	draw_string(time_str, COOLVETICACR200, BLACK, TIME_X_CORD , TIME_Y_CORD);
+
+	if(curr_state >= TIME_CONFIG_UPD_MIN0 && curr_state <= TIME_CONFIG_UPD_HRS1){
+		temp_var = ((mcp_config_time.hrs>>4)&0x03)*10 +(mcp_config_time.hrs&0x0F);
+		strcat(time_str,hours_of_day_wspaces[temp_var]);
+		strcat(time_str,":");
+		temp_var = ((mcp_config_time.min>>4)&0x07)*10 +(mcp_config_time.min&0x0F);
+		strcat(time_str,minutes_of_hour_wspaces[temp_var]);
+		draw_string(time_str, COOLVETICACR200, BLACK, TIME_X_CORD , TIME_Y_CORD);
+
+		if(curr_state == TIME_CONFIG_UPD_MIN0){
+			draw_hLine(TIME_X_CORD + (32*0 + 16*0 +12*0) , (TIME_Y_CORD - 40), (32*3 + 16*4 +12*1)	, WHITE);
+			draw_hLine(TIME_X_CORD + (32*3 + 16*4 +12*1) , (TIME_Y_CORD - 40), (32*1 + 16*0 +12*0)	, BLACK);
+
+		}
+		else if(curr_state == TIME_CONFIG_UPD_MIN1){
+			draw_hLine(TIME_X_CORD + (32*0 + 16*0 +12*0), (TIME_Y_CORD - 40), (32*2 + 16*3 + 12*1)	, WHITE);
+			draw_hLine(TIME_X_CORD + (32*2 + 16*3 +12*1), (TIME_Y_CORD - 40), (32*1 + 16*0 + 12*0)	, BLACK);
+			draw_hLine(TIME_X_CORD + (32*3 + 16*3 +12*1), (TIME_Y_CORD - 40), (32*1 + 16*1 + 12*0)	, WHITE);
+		}
+		else if(curr_state == TIME_CONFIG_UPD_HRS0){
+			draw_hLine(TIME_X_CORD + (32*0 + 16*0 +12*0), (TIME_Y_CORD - 40), (32*1 + 16*1 + 12*0) 	, WHITE);
+			draw_hLine(TIME_X_CORD + (32*1 + 16*1 +12*0), (TIME_Y_CORD - 40), (32*1 + 16*0 + 12*0)	, BLACK);
+			draw_hLine(TIME_X_CORD + (32*2 + 16*1 +12*0), (TIME_Y_CORD - 40), (32*2 + 16*3 + 12*1)	, WHITE);
+		}
+		else
+		{
+			draw_hLine(TIME_X_CORD + (32*0 + 16*0 +12*0), (TIME_Y_CORD - 40), (32*1 + 16*0 +12*0)	, BLACK);
+			draw_hLine(TIME_X_CORD + (32*1 + 16*0 +12*0), (TIME_Y_CORD - 40), (32*3 + 16*4 +12*1)	, WHITE);
+		}
+	}
+	else
+	{
+		temp_var = ((mcp_curr_time.hrs>>4)&0x03)*10 +(mcp_curr_time.hrs&0x0F);
+		strcat(time_str,hours_of_day_wspaces[temp_var]);
+		strcat(time_str,":");
+		temp_var = ((mcp_curr_time.min>>4)&0x07)*10 +(mcp_curr_time.min&0x0F);
+		strcat(time_str,minutes_of_hour_wspaces[temp_var]);
+		draw_string(time_str, COOLVETICACR200, BLACK, TIME_X_CORD , TIME_Y_CORD);
+	}
 }
 
 void clockface_assemble_alarms(){
-	draw_string("ALARMS",HELVETICA30, BLACK, 265, 90);
+	draw_string("ALARMS",COOLVETICA30, BLACK, 265, 90);
 	uint8_t temp_var; 	// temp var to hold bcd to decimal conversion of values.
 	alarm_t *alarm_table = get_alarms();
 	for(int i = 0;i<4;i++){
@@ -162,16 +183,16 @@ void clockface_assemble_alarms(){
 		strcat(time_str,":");
 		temp_var = ((alarm_table[i].alarm_min>>4)&0x07)*10 +(alarm_table[i].alarm_min&0x0F);
 		strcat(time_str,minutes_of_hour[temp_var]);
-		draw_string(time_str, HELVETICA30, BLACK, 238, 118 + i*28);
+		draw_string(time_str, COOLVETICA30, BLACK, 238, 118 + i*28);
 
 		if(curr_state >= ALARM_CONFIG_SELECT && curr_state <= ALARM_CONFIG_UPD_HRS1){
 			uint16_t arrow_x_cord = 238 + 70;
 			uint16_t arrow_y_cord = 118 + i*28;
 			if(alarm_index == i){
-				draw_string("<--", HELVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
+				draw_string("<--", COOLVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
 			}
 			else{
-				draw_string("    ", HELVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
+				draw_string("    ", COOLVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
 			}
 			if(curr_state == ALARM_CONFIG_UPD_MIN0){
 				uint16_t highlight_y_cord = 118 + alarm_index*28-3;
@@ -203,7 +224,7 @@ void clockface_assemble_alarms(){
 		{
 			uint16_t arrow_x_cord = 238 + 70;
 			uint16_t arrow_y_cord = 118 + i*28;
-			draw_string("    ", HELVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
+			draw_string("    ", COOLVETICA30, BLACK, arrow_x_cord, arrow_y_cord);
 		}
 
 		if(alarm_table[i].usr_alarm_enb){
@@ -223,22 +244,20 @@ void clockface_assemble_alarms(){
 }
 
 void clockface_assemble_temp(){
+	uint8_t *temp_hum;
+	temp_hum = hdc2022_get_data();
+	draw_string("ROOM", COOLVETICA30, BLACK, 280, 236);
+	temp_str[0] = temp_hum[0]/10+48;
+	temp_str[1] = temp_hum[0]%10+48;
 
+	hum_str[0] = temp_hum[1]/10+48;
+	hum_str[1] = temp_hum[1]%10+48;
+	draw_string("TEMP ", COOLVETICA30, BLACK, 238, 264);
+	draw_string("RH   ", COOLVETICA30, BLACK, 240, 292);
+	draw_string(":", COOLVETICA30, BLACK, 330, 264);
+	draw_string(":   ", COOLVETICA30, BLACK, 330, 292);
+	draw_string(temp_str, COOLVETICA30, BLACK, 342, 264);
+	draw_string(hum_str, COOLVETICA30, BLACK, 342, 292);
 }
 
-void clockface_update_time(){
-
-}
-
-void clockface_update_date(){
-
-}
-
-void clockface_update_temp(){
-
-}
-
-void clockface_update_alarms(){
-
-}
 

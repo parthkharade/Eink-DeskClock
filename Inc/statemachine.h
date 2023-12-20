@@ -8,7 +8,7 @@
 #ifndef STATEMACHINE_H_
 #define STATEMACHINE_H_
 #include "stdint.h"
-#include "alarms.h"
+
 typedef enum{
 	IDLE,
 
@@ -32,19 +32,6 @@ typedef enum{
 
 extern clock_state_t curr_state;
 void empty_function();
-
-
-
-void time_inc_min0();
-void time_dec_min0();
-void time_inc_min1();
-void time_dec_min1();
-
-void time_inc_hrs0();
-void time_dec_hrs0();
-void time_inc_hrs1();
-void time_dec_hrs1();
-
 void process_event(uint8_t event);
 #endif /* STATEMACHINE_H_ */
 

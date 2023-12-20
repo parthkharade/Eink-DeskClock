@@ -32,6 +32,7 @@
 #include "statemachine.h"
 #include "timeanddate.h"
 #include "timer.h"
+#include "alarms.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
@@ -53,7 +54,6 @@ int main(void)
 	i2c_init();
 	display_init();
 	init_mcp7940();
-	init_draw_module();
 	init_fonts();
 
 	timer4_init();
@@ -79,6 +79,14 @@ int main(void)
 			process_event(button_status);
 		}
 		clockface_update();
+		if(display_timeout_flag){
+			update_clockface = 1;
+			init_gpio();
+			display_init();
+			clockface_update();
+			display_init_partial();
+			display_timeout_flag = 0;
+		}
 		check_alarm_match();
 	}
 
@@ -99,11 +107,11 @@ void init_clocks(){
 		while(!(RCC->CFGR & RCC_CFGR_SWS_PLL));
 }
 void enable_module_clocks(){
-	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOAEN); // GPIO A
-	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOBEN); //GPIO B
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; // SPI1
-	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; // I2C1
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN; // GPIOD
-	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;	// TIMER4;
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;	// TIMER4;
+	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOAEN); 	// GPIO A
+	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOBEN); 	//GPIO B
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; 	// SPI1
+	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; 	// I2C1
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN; 	// GPIOD
+	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;		// TIMER4;
+	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;		// TIMER4;
 }

@@ -8,6 +8,8 @@
 
 #include "statemachine.h"
 #include "clockface.h"
+#include "alarms.h"
+#include "timeanddate.h"
 typedef void(*clockstate_callback)();
 
 
@@ -33,10 +35,10 @@ state_table_entry_t state_tbl[] = {
 	{ALARM_CONFIG_UPD_HRS0, {ALARM_CONFIG_SELECT,  	ALARM_CONFIG_UPD_HRS1,  ALARM_CONFIG_UPD_HRS0, 	 ALARM_CONFIG_UPD_HRS0}, {empty_function,empty_function,alarm_dec_hrs0,alarm_inc_hrs0}},
 	{ALARM_CONFIG_UPD_HRS1, {ALARM_CONFIG_SELECT,  	ALARM_CONFIG_UPD_MIN0,  ALARM_CONFIG_UPD_HRS1, 	 ALARM_CONFIG_UPD_HRS1}, {empty_function,empty_function,alarm_dec_hrs1,alarm_inc_hrs1}},
 
-	{TIME_CONFIG_UPD_MIN0, {IDLE,  	TIME_CONFIG_UPD_MIN1,  TIME_CONFIG_UPD_MIN0, 	 TIME_CONFIG_UPD_MIN0}, {empty_function,empty_function,time_dec_min0,time_inc_min0}},
-	{TIME_CONFIG_UPD_MIN1, {IDLE,  	TIME_CONFIG_UPD_HRS0,  TIME_CONFIG_UPD_MIN1, 	 TIME_CONFIG_UPD_MIN1}, {empty_function,empty_function,time_dec_min1,time_inc_min1}},
-	{TIME_CONFIG_UPD_HRS0, {IDLE,  	TIME_CONFIG_UPD_HRS1,  TIME_CONFIG_UPD_HRS0, 	 TIME_CONFIG_UPD_HRS0}, {empty_function,empty_function,time_dec_hrs0,time_inc_hrs0}},
-	{TIME_CONFIG_UPD_HRS1, {IDLE,  	TIME_CONFIG_UPD_MIN0,  TIME_CONFIG_UPD_HRS1, 	 TIME_CONFIG_UPD_HRS1}, {empty_function,empty_function,time_dec_hrs1,time_inc_hrs1}},
+	{TIME_CONFIG_UPD_MIN0, {IDLE,  					IDLE,  					TIME_CONFIG_UPD_MIN1, 	 TIME_CONFIG_UPD_MIN0}, {update_time,set_time_mcp7490,empty_function,time_inc_min0}},
+	{TIME_CONFIG_UPD_MIN1, {IDLE,  					IDLE, 				 	TIME_CONFIG_UPD_HRS0, 	 TIME_CONFIG_UPD_MIN1}, {update_time,set_time_mcp7490,empty_function,time_inc_min1}},
+	{TIME_CONFIG_UPD_HRS0, {IDLE,  					IDLE,  					TIME_CONFIG_UPD_HRS1, 	 TIME_CONFIG_UPD_HRS0}, {update_time,set_time_mcp7490,empty_function,time_inc_hrs0}},
+	{TIME_CONFIG_UPD_HRS1, {IDLE,  					IDLE,  					TIME_CONFIG_UPD_MIN0, 	 TIME_CONFIG_UPD_HRS1}, {update_time,set_time_mcp7490,empty_function,time_inc_hrs1}},
 };
 
 
@@ -60,33 +62,5 @@ void process_event(uint8_t event){
 void empty_function(){
 
 }
-
-
-void time_inc_min0(){
-
-}
-void time_dec_min0(){
-
-}
-void time_inc_min1(){
-
-}
-void time_dec_min1(){
-
-}
-
-void time_inc_hrs0(){
-
-}
-void time_dec_hrs0(){
-
-}
-void time_inc_hrs1(){
-
-}
-void time_dec_hrs1(){
-
-}
-
 
 

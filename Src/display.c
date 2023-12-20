@@ -15,6 +15,10 @@
  * D/nC : 1-Data 0-Command
  * BSY is active high. 1 means device is busy.
  */
+
+uint16_t busy_wait_count = 0;
+uint8_t display_timeout_flag = 0;
+uint8_t display_timeout_count = 0;
 const unsigned char EPD_4IN2_Partial_lut_vcom1[] ={
     0x00, 0x01, 0x20, 0x01, 0x00, 0x01,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -71,60 +75,6 @@ const unsigned char EPD_4IN2_Partial_lut_bb1[] ={
     0x00, 0x00,0x00, 0x00, 0x00, 0x00,
 };
 
-
-/******************************gray*********************************/
-//0~3 gray
-const unsigned char EPD_4IN2_4Gray_lut_vcom[] =
-{
-    0x00 ,0x0A ,0x00 ,0x00 ,0x00 ,0x01,
-    0x60 ,0x14 ,0x14 ,0x00 ,0x00 ,0x01,
-    0x00 ,0x14 ,0x00 ,0x00 ,0x00 ,0x01,
-    0x00 ,0x13 ,0x0A ,0x01 ,0x00 ,0x01,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00
-
-};
-//R21
-const unsigned char EPD_4IN2_4Gray_lut_ww[] ={
-    0x40 ,0x0A ,0x00 ,0x00 ,0x00 ,0x01,
-    0x90 ,0x14 ,0x14 ,0x00 ,0x00 ,0x01,
-    0x10 ,0x14 ,0x0A ,0x00 ,0x00 ,0x01,
-    0xA0 ,0x13 ,0x01 ,0x00 ,0x00 ,0x01,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-};
-//R22H	r
-const unsigned char EPD_4IN2_4Gray_lut_bw[] ={
-    0x40 ,0x0A ,0x00 ,0x00 ,0x00 ,0x01,
-    0x90 ,0x14 ,0x14 ,0x00 ,0x00 ,0x01,
-    0x00 ,0x14 ,0x0A ,0x00 ,0x00 ,0x01,
-    0x99 ,0x0C ,0x01 ,0x03 ,0x04 ,0x01,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-};
-//R23H	w
-const unsigned char EPD_4IN2_4Gray_lut_wb[] ={
-    0x40 ,0x0A ,0x00 ,0x00 ,0x00 ,0x01,
-    0x90 ,0x14 ,0x14 ,0x00 ,0x00 ,0x01,
-    0x00 ,0x14 ,0x0A ,0x00 ,0x00 ,0x01,
-    0x99 ,0x0B ,0x04 ,0x04 ,0x01 ,0x01,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-};
-//R24H	b
-const unsigned char EPD_4IN2_4Gray_lut_bb[] ={
-    0x80 ,0x0A ,0x00 ,0x00 ,0x00 ,0x01,
-    0x90 ,0x14 ,0x14 ,0x00 ,0x00 ,0x01,
-    0x20 ,0x14 ,0x0A ,0x00 ,0x00 ,0x01,
-    0x50 ,0x13 ,0x01 ,0x00 ,0x00 ,0x01,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-    0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00,
-};
 static void EPD_4IN2_Partial_SetLut(void);
 static void EPD_4IN2_Partial_SetLut(void)
 {
@@ -151,73 +101,73 @@ static void EPD_4IN2_Partial_SetLut(void)
 }
 void display_init() {
 	display_reset();
-	display_send_command(0x01);			//POWER SETTING
+	display_send_command(DISP_PWR);			//POWER SETTING
 	display_send_data(0x03);
 	display_send_data(0x00);
 	display_send_data(0x2b);
 	display_send_data(0x2b);
 
-	display_send_command(0x06);         //boost soft start
+	display_send_command(DISP_BTST);         //boost soft start
 	display_send_data(0x17);		//A
 	display_send_data(0x17);		//B
 	display_send_data(0x17);		//C
 
-	display_send_command(0x04);
+	display_send_command(DISP_PON);
 	display_busy_wait();
 
-	display_send_command(0x00);			//panel setting
+	display_send_command(DISP_PSR);			//panel setting
 	display_send_data(0x1f);		//KW-bf   KWR-2F	BWROTP 0f	BWOTP 1f
 
 
-	display_send_command(0x30);
+	display_send_command(DISP_PLL);
 	display_send_data(0x3c);      	// 3A 100HZ   29 150Hz 39 200HZ	31 171HZ
 
-	display_send_command(0x61);			//resolution setting
+	display_send_command(DISP_TRES);			//resolution setting
 	display_send_data(0x01);
 	display_send_data(0x90);	 //400
 	display_send_data(0x01);	 //300
 	display_send_data(0x2c);
 
-	display_send_command(0x82);			//vcom_DC setting
+	display_send_command(DISP_VDCS);			//vcom_DC setting
 	display_send_data(0x12);
 
-	display_send_command(0X50);
+	display_send_command(DISP_CDI);
 	display_send_data(0x97);
 
 }
 void display_init_partial() {
 	display_reset();
-	display_send_command(0x01);			//POWER SETTING
+	display_send_command(DISP_PWR);			//POWER SETTING
 	display_send_data(0x03);
 	display_send_data(0x00);
 	display_send_data(0x2b);
 	display_send_data(0x2b);
 
-	display_send_command(0x06);         //boost soft start
+	display_send_command(DISP_BTST);         //boost soft start
 	display_send_data(0x17);		//A
 	display_send_data(0x17);		//B
 	display_send_data(0x17);		//C
 
-	display_send_command(0x04);
+	display_send_command(DISP_PON);
 	display_busy_wait();
 
-	display_send_command(0x00);			//panel setting
+	display_send_command(DISP_PSR);			//panel setting
 	display_send_data(0xbf);		//KW-bf   KWR-2F	BWROTP 0f	BWOTP 1f
 
 
-	display_send_command(0x30);
+	display_send_command(DISP_PLL);
 	display_send_data(0x3c);      	// 3A 100HZ   29 150Hz 39 200HZ	31 171HZ
 
-	display_send_command(0x61);			//resolution setting
+	display_send_command(DISP_TRES);			//resolution setting
 	display_send_data(0x01);
 	display_send_data(0x90);	 //400
 	display_send_data(0x01);	 //300
 	display_send_data(0x2c);
 
-	display_send_command(0x82);			//vcom_DC setting
+	display_send_command(DISP_VDCS);			//vcom_DC setting
 	display_send_data(0x12);
 
-	display_send_command(0X50);
+	display_send_command(DISP_CDI);
 	display_send_data(0x97);
 
 	EPD_4IN2_Partial_SetLut();
@@ -246,15 +196,24 @@ void display_send_data(uint8_t data) {
 	SET_CS;
 }
 void display_busy_wait() {
-	display_send_command(0x71);
+	display_send_command(DISP_FLG);
 	while (BUSY_STS == 0) {      //LOW: idle, HIGH: busy
-		display_send_command(0x71);
+		display_send_command(DISP_FLG);
 		delay_ms(100);
+		busy_wait_count++;
+		if(busy_wait_count>80){
+			busy_wait_count = 0;
+			display_timeout_flag = 1;
+			display_timeout_count++;
+			break;
+		}
 	}
+	busy_wait_count = 0;
+
 }
 
 void display_clear(){
-	display_send_command(0x13);
+	display_send_command(DISP_DTM2);
 	for(int i=0;i<DISPLAY_BUFFER_SIZE;i++){
 		display_send_data(0xFF);
 	}

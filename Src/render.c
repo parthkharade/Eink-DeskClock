@@ -115,12 +115,4 @@ void draw_pixel(uint16_t x,uint16_t y,colour_t colour){
 void create_buffer_copy(){
 	memcpy(old_image_buffer,image_buffer,DISPLAY_BUFFER_SIZE);
 }
-void clear_area(uint16_t x,uint16_t y){
 
-}
-void set_area(uint16_t x, uint16_t y){
-
-}
-void init_draw_module() {
-
-}

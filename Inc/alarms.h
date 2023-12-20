@@ -21,6 +21,7 @@ alarm_t *get_alarms();
 void alarm_toggle();
 void alarm_inc_index();
 void system_enable_alarms();
+void check_alarm_match();
 void sound_alarm();
 void mute_alarm();
 uint8_t is_alarm_ringing();

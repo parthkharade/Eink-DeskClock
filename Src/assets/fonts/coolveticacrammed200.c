@@ -10162,7 +10162,7 @@ const uint8_t coolveticacrammed200_glyph_bitmap[] =
   0x00, 0x00, 0x00, 0x00,  //................................ 
 
 
-  /*Unicode: U+0031 (1) , Width: 18 */
+  /*Unicode: U+0031 (1) , Width: 32 */
   0x00, 0x00, 0x00, 0x00,  //..................
   0x00, 0x00, 0x00, 0x00, //..................
   0x00, 0x00, 0x00, 0x00, //..................
@@ -13477,7 +13477,7 @@ const font_glyph_dsc_t coolveticacrammed200_glyph_dsc[] =
   {.w_px = 32,	.glyph_index = 16800},	/*Unicode: U+0037 (7)*/
   {.w_px = 32,	.glyph_index = 17600},	/*Unicode: U+0038 (8)*/
   {.w_px = 32,	.glyph_index = 18400},	/*Unicode: U+0039 (9)*/
-  {.w_px = 11,	.glyph_index = 19200},	/*Unicode: U+003a (:)*/
+  {.w_px = 12,	.glyph_index = 19200},	/*Unicode: U+003a (:)*/
   {.w_px = 11,	.glyph_index = 19600},	/*Unicode: U+003b (;)*/
   {.w_px = 29,	.glyph_index = 20000},	/*Unicode: U+003c (<)*/
   {.w_px = 29,	.glyph_index = 20800},	/*Unicode: U+003d (=)*/

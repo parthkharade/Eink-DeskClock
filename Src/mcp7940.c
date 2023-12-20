@@ -10,7 +10,7 @@
 #include "systick.h"
 #include "stdbool.h"
 #include "timeanddate.h"
-
+#include "statemachine.h"
 rtc_time_t mcp_curr_time;
 rtc_time_t mcp_config_time;
 bool change_mcp_time = false;
@@ -62,4 +62,5 @@ void  get_time_mcp7490(){
 	mcp_curr_time.date =	time_buf[4];
 	mcp_curr_time.month =	time_buf[5];
 	mcp_curr_time.year	=	time_buf[6];
+
 }

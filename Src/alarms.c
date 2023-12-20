@@ -10,10 +10,10 @@
 uint8_t alarm_index;
 uint8_t alarm_ring_index;
 alarm_t alarm_table[]={
-		{0x23,0x02,0,1,0},
-		{0x23,0x03,0,1,0},
-		{0x23,0x04,0,1,0},
-		{0x23,0x05,0,1,0}
+		{0x18,0x02,0,1,0},
+		{0x18,0x03,0,1,0},
+		{0x18,0x04,0,1,0},
+		{0x18,0x05,0,1,0}
 };
 
 void system_enable_alarms(){
@@ -100,23 +100,41 @@ void alarm_dec_min1(){
 
 void alarm_inc_hrs0(){
 	alarm_table[alarm_index].alarm_hrs ++;
-	if(((alarm_table[alarm_index].alarm_hrs) & 0x0F) == 0x0A)
+	if((((alarm_table[alarm_index].alarm_hrs) & 0xF0) == 0x20) && (((alarm_table[alarm_index].alarm_hrs) & 0x0F) == 0x04)){
 		alarm_table[alarm_index].alarm_hrs &= 0xF0;
+	}
+	else if(((alarm_table[alarm_index].alarm_hrs) & 0x0F) == 0x0A){
+		alarm_table[alarm_index].alarm_hrs &= 0xF0;
+	}
+
 }
 void alarm_dec_hrs0(){
-	if(((alarm_table[alarm_index].alarm_hrs) & 0x0F) == 0x00)
-		alarm_table[alarm_index].alarm_hrs |= 0x09;
-	else
+	if(((alarm_table[alarm_index].alarm_hrs & 0x0F) == 0x00) && ((alarm_table[alarm_index].alarm_hrs & 0xF0) == 0x20)){
+			alarm_table[alarm_index].alarm_hrs |= 0x03;
+	}
+	else if((alarm_table[alarm_index].alarm_hrs & 0x0F) == 0x00){
+			alarm_table[alarm_index].alarm_hrs |= 0x09;
+	}
+	else{
 		alarm_table[alarm_index].alarm_hrs --;
+	}
 }
 void alarm_inc_hrs1(){
 	alarm_table[alarm_index].alarm_hrs +=16;
-	if(((alarm_table[alarm_index].alarm_hrs) & 0xF0) == 0x30)
+	if( ((alarm_table[alarm_index].alarm_hrs & 0x0F) >= 0x04) && ((alarm_table[alarm_index].alarm_hrs & 0xF0) == 0x20))
 		alarm_table[alarm_index].alarm_hrs &= 0x0F;
+	else if((alarm_table[alarm_index].alarm_hrs & 0xF0) == 0x30){
+		alarm_table[alarm_index].alarm_hrs &= 0x0F;
+	}
 }
 void alarm_dec_hrs1(){
-	if(((alarm_table[alarm_index].alarm_hrs) & 0xF0) == 0x00)
+	if( ((alarm_table[alarm_index].alarm_hrs & 0x0F) >= 0x04) && ((alarm_table[alarm_index].alarm_hrs & 0xF0) == 0x00)){
+		alarm_table[alarm_index].alarm_hrs |= 0x10;
+	}
+	else if((alarm_table[alarm_index].alarm_hrs & 0xF0) == 0x00){
 		alarm_table[alarm_index].alarm_hrs |= 0x20;
-	else
+	}
+	else{
 		alarm_table[alarm_index].alarm_hrs -=16;
+	}
 }
