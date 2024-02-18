@@ -40,17 +40,5 @@ void start_timer(TIM_TypeDef * TIM);
  * */
 void stop_timer(TIM_TypeDef * TIM);
 
-/**
- * @brief Returns the current duty cycle.
- * 
- * @return uint8_t 
- */
-uint8_t get_duty();
 
-/**
- * @brief Changes the duty cycle by step
- * 
- * @param step 
- */
-void change_duty(int8_t step);
 #endif /* TIMER_H_ */

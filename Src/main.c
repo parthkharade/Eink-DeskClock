@@ -24,7 +24,6 @@
 #include "mux.h"
 #include "display.h"
 #include "render.h"
-#include "assets/icons/icons.h"
 #include "i2c.h"
 #include "hdc2022.h"
 #include "mcp7940.h"
@@ -32,12 +31,12 @@
 #include "statemachine.h"
 #include "timeanddate.h"
 #include "timer.h"
+#include "clocks.h"
 #include "alarms.h"
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
-void init_clocks();
-void enable_module_clocks();
+
 uint8_t button_status = 0;
 uint8_t event_occurred=0;
 
@@ -52,17 +51,20 @@ int main(void)
 	init_gpio();
 	init_spi1();
 	i2c_init();
-	display_init();
-	init_mcp7940();
-	init_fonts();
-
 	timer4_init();
 	timer5_init();
 
-	__enable_irq();
+
+	init_mcp7940();
+	init_fonts();
+
+
+
 	assemble_clockface();
+	display_init();
 	display_render_image((uint8_t *)image_buffer);
 	display_init_partial();
+	__enable_irq();
 	while(1){
 		update_time();
 		if(check_time_diff()){
@@ -79,7 +81,7 @@ int main(void)
 			process_event(button_status);
 		}
 		clockface_update();
-		if(display_timeout_flag){
+		if(display_timeout_flag){ // Resets the display in case of a busy wait timeout.
 			update_clockface = 1;
 			init_gpio();
 			display_init();
@@ -91,27 +93,4 @@ int main(void)
 	}
 
 }
-void init_clocks(){
 
-		RCC->CR	&= ~(RCC_CR_PLLON);
-		RCC->CFGR |= (0b11<< RCC_CFGR_MCO1_Pos);
-		FLASH->ACR = (1<<8) | (1<<9)| (1<<10)| (5<<0);
-		RCC->PLLCFGR = 0;
-		RCC->PLLCFGR |= (8<<RCC_PLLCFGR_PLLQ_Pos)|(8<<RCC_PLLCFGR_PLLM_Pos)|(192<<RCC_PLLCFGR_PLLN_Pos)|(1<<RCC_PLLCFGR_PLLP_Pos);
-		RCC->CR |= RCC_CR_HSION;
-		while(!( RCC->CR & RCC_CR_HSIRDY));
-		RCC->CFGR |= (0b100<<RCC_CFGR_PPRE1_Pos)|(0b000<<RCC_CFGR_PPRE2_Pos)|(0b0000<<RCC_CFGR_HPRE_Pos);
-		RCC->CR |= RCC_CR_PLLON;
-		while(!( RCC->CR & RCC_CR_PLLRDY));
-		RCC->CFGR |= (0b10<<RCC_CFGR_SW_Pos);
-		while(!(RCC->CFGR & RCC_CFGR_SWS_PLL));
-}
-void enable_module_clocks(){
-	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOAEN); 	// GPIO A
-	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOBEN); 	//GPIO B
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; 	// SPI1
-	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN; 	// I2C1
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN; 	// GPIOD
-	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;		// TIMER4;
-	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;		// TIMER4;
-}

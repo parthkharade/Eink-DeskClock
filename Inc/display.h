@@ -64,18 +64,97 @@
 #define DISPLAY_BUFFER_SIZE 	(((DISPLAY_WIDTH)/8)*(DISPLAY_HEIGHT))
 
 extern uint8_t display_timeout_flag;
+
+/**
+ * @brief Initialize the display to use Waveforms from OTP to undergo full refresh 
+ * 
+ */
 void display_init();
+
+/**
+ * @brief Intialise the diplsay to use waveforms from registers to undergo fast refresh. 
+ * 
+ */
 void display_init_partial();
+
+/**
+ * @brief Send a command to the display 
+ * 
+ * @param cmd 
+ */
 void display_send_command(uint8_t cmd);
+
+/**
+ * @brief Send Data to the display 
+ * 
+ * @param data 
+ */
 void display_send_data(uint8_t data);
+
+/**
+ * @brief Clear the display 
+ * 
+ */
 void display_clear();
+
+/**
+ * @brief reset the Display 
+ * 
+ */
 void display_reset();
+
+/**
+ * @brief Wait for the display to process the current command.
+ * 
+ */
 void display_busy_wait();
+
+/**
+ * @brief Send the image bufffer to the display and call then refresh
+ * 
+ * @param imageData 
+ */
 void display_render_image(uint8_t* imageData);
+
+/**
+ * @brief Address a parital window of the display. Still not tested completely. DO NOT USE. 
+ * 
+ * @param image_data 
+ * @param width 
+ * @param height 
+ */
 void display_render_partial_image(uint8_t *image_data,uint16_t width,uint16_t height);
+
+/**
+ * @brief Set up look up tables in registers to enable fast refresh.
+ * 
+ */
 void display_set_lut(void);
+
+/**
+ * @brief Set the window for partial updates 
+ * 
+ * @param x_start 
+ * @param x_end 
+ * @param y_start 
+ * @param y_end 
+ */
 void display_set_partial(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end);
+
+/**
+ * @brief Enable Partial Mode 
+ * 
+ */
 void display_partial_enable();
+
+/**
+ * @brief Disable partial mode 
+ * 
+ */
 void display_partial_disable();
+/**
+ * @brief Send command to refresh the display.
+ * 
+ */
 void display_refresh();
 #endif /* DISPLAY_H_ */

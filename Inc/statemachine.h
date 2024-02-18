@@ -31,7 +31,18 @@ typedef enum{
 }clock_state_t;
 
 extern clock_state_t curr_state;
+
+/**
+ * @brief An empty callback function when a state change is required without any action 
+ * 
+ */
 void empty_function();
+
+/**
+ * @brief Process the event that has occured by executing the required state change and the callback function. 
+ * 
+ * @param event 
+ */
 void process_event(uint8_t event);
 #endif /* STATEMACHINE_H_ */
 

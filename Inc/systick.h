@@ -16,8 +16,29 @@ typedef struct{
 	uint32_t mins;
 	uint32_t ms;
 }sys_time_t;
+/**
+ * @brief Initialises the systick timer. 
+ * 
+ */
 void init_systick();
+
+/**
+ * @brief Starts the systick timer. 
+ * 
+ */
 void start_systick();
+
+/**
+ * @brief Returns the current systime.
+ * 
+ * @return sys_time_t 
+ */
 sys_time_t get_time();
+
+/**
+ * @brief blocking delay of delay milliseconds. 
+ * 
+ * @param delay 
+ */
 void delay_ms(uint32_t delay);
 #endif /* SYSTICK_H_ */
