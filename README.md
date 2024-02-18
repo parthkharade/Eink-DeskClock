@@ -8,9 +8,12 @@ Features : <br>
 * Display the current room temperature and humidty.
 * 4 user-configurable alarms.
 
+
 ## Motivation
 I had wanted to work with e-paper displays for quite some time now and the final project for my graduate course in Embedded Systems Design provided me with the perfect opportunity to do so.
 I wanted to learn how to write a basic text/image rendering library and E-paper displays seemed to be the perfect place to start. <br> You can read more about the project and the groundwaork in the [Project Report](/FinalReport.pdf).
+
+## [Link to Video Demonstration](https://drive.google.com/drive/folders/16hQ_8MMb17Ao2Q70kuz9eXQXmRNZ9ggW?usp=sharing)
 
 ## Hardware.
 
